@@ -26,6 +26,7 @@
 #include "wine/debug.h"
 #include "objbase.h"
 
+#include "fileapi.h"
 #include "activation.h"
 #include "rometadataresolution.h"
 
