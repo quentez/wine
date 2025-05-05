@@ -9,16 +9,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:25.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Install dependencies
         run: |
-          sudo dpkg --add-architecture i386
-          sudo apt update
-          sudo apt install -y \
+          dpkg --add-architecture i386 && \
+          apt-get update && \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             build-essential \
             gcc \
             g++ \
@@ -90,12 +89,17 @@ jobs:
             libsmbclient-dev \
             opencl-headers \
             ocl-icd-opencl-dev \
-            p7zip-full
+            p7zip-full \
+            git \
+            gcc-mingw-w64
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Build Wine64
         run: |
           mkdir -p build64 && cd build64
-          PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig ../configure --enable-archs=x86_64 --prefix=/tmp/wine-install --with-wayland --with-opencl --enable-win64
+          PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig ../configure --enable-archs=i386,x86_64 --prefix=/tmp/wine-install --with-wayland --with-opencl --enable-win64
           make -j$(nproc)
           make install
 
