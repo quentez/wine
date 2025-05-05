@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - affinity-wine-10.4
+      - affinity-wine-10.7
   workflow_dispatch:
 
 jobs:
@@ -95,17 +95,16 @@ jobs:
       - name: Build Wine64
         run: |
           mkdir -p build64 && cd build64
-          PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig ../configure --enable-archs=x86_64 --prefix=/tmp/wine-install --with-wayland --with-opencl --enable-win64
+          PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig ../configure --enable-archs=i386,x86_64 --prefix=/tmp/wine-install --with-wayland --with-opencl --enable-win64
           make -j$(nproc)
-          make install DESTDIR=/tmp/wine64-binaries
+          make install
 
-      - name: Package Wine64 build
+      - name: Package Wine build
         run: |
-          cd /tmp/wine64-binaries
-          7z a /tmp/wine64-binaries/wine64.7z /tmp/wine64-binaries/*
+          7z a /tmp/wine-install/specialwine.7z /tmp/wine-install/*
 
       - name: Upload Binaries to Actions Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: wine64
-          path: /tmp/wine64-binaries/wine64.7z
+          path: /tmp/wine-install/specialwine.7z
