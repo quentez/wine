@@ -83,14 +83,14 @@ static INT CALLBACK SIC_CompareEntries( LPVOID p1, LPVOID p2, LPARAM lparam)
 
 	/* Icons in the cache are keyed by the name of the file they are
 	 * loaded from, their resource index and the fact if they have a shortcut
-	 * icon overlay or not. 
+	 * icon overlay or not.
 	 */
 
         if (lparam & SIC_COMPARE_LISTINDEX)
             return e1->dwListIndex != e2->dwListIndex;
 
 	if (e1->dwSourceIndex != e2->dwSourceIndex || /* first the faster one */
-	    (e1->dwFlags & GIL_FORSHORTCUT) != (e2->dwFlags & GIL_FORSHORTCUT)) 
+	    (e1->dwFlags & GIL_FORSHORTCUT) != (e2->dwFlags & GIL_FORSHORTCUT))
 	  return 1;
 
 	if (wcsicmp(e1->sSourceFile,e2->sSourceFile))
@@ -145,7 +145,7 @@ static int SIC_LoadOverlayIcon(int icon_idx);
  *
  * NOTES
  *  Creates a new icon as a copy of the passed-in icon, overlaid with a
- *  shortcut image. 
+ *  shortcut image.
  */
 static HICON SIC_OverlayShortcutImage(HICON SourceIcon, int type)
 {
@@ -853,7 +853,7 @@ UINT WINAPI ExtractIconExA(LPCSTR lpszFile, INT nIconIndex, HICON * phiconLarge,
  * executable) and patch parameters if needed.
  */
 HICON WINAPI ExtractAssociatedIconA(HINSTANCE hInst, LPSTR lpIconPath, LPWORD lpiIcon)
-{	
+{
     HICON hIcon = NULL;
     INT len = MultiByteToWideChar(CP_ACP, 0, lpIconPath, -1, NULL, 0);
     /* Note that we need to allocate MAX_PATH, since we are supposed to fill
@@ -1162,9 +1162,7 @@ HRESULT WINAPI SHGetStockIconInfo(SHSTOCKICONID id, UINT flags, SHSTOCKICONINFO 
     GetSystemDirectoryW(sii->szPath, MAX_PATH);
     lstrcatW(sii->szPath, L"\\shell32.dll");
 
-    sii->hIcon = NULL;
-    if (flags & SHGSI_ICON)
-        sii->hIcon = LoadIconW(GetModuleHandleW(sii->szPath), MAKEINTRESOURCEW(sii->iIcon));
+    sii->hIcon = LoadIconW(GetModuleHandleW(L"shell32.dll"), MAKEINTRESOURCEW(IDI_SHELL_FILE));
     sii->iSysImageIndex = -1;
 
     /* this is not how windows does it, on windows picked mostly from imageres.dll !*/
