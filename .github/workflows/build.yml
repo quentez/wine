@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - affinity-wine-10.7
+    tags:
+      - v*
   workflow_dispatch:
 
 jobs:
@@ -102,8 +104,27 @@ jobs:
           make -j$(nproc)
           make install
 
+      - name: Compress
+        run: |
+          tar -czf /tmp/wine.tar.gz /tmp/wine-install/
+
       - name: Upload Binaries to Actions Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: wine
-          path: /tmp/wine-install/
+          path: /tmp/wine.tar.gz
+
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wine
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: wine.tar.gz
