@@ -100,7 +100,7 @@ jobs:
       - name: Build Wine64
         run: |
           mkdir -p build64 && cd build64
-          PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig ../configure --enable-archs=x86_64 --prefix=/tmp/wine-install --with-wayland --with-opencl --enable-win64
+          PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig ../configure --enable-archs=i386,x86_64 --prefix=/tmp/wine-install --with-wayland --with-opencl --enable-win64
           make -j$(nproc)
           make install
 
